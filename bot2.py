@@ -3,7 +3,7 @@ import requests, re, json
 from urllib.parse import quote
 from io import BytesIO
 
-bot = telebot.TeleBot(os.environ.get('TOKEN', '111:AAA'))
+bot = telebot.TeleBot(os.environ.get('BOT_TOKEN', '111:AAA'))
 client = genai.Client(api_key=os.environ.get('KEY', '222:BBB'))
 
 DB = 'memory.json'

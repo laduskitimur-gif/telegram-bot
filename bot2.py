@@ -22,13 +22,19 @@ def humanize_error(e):
     if '429' in s or 'RESOURCE_EXHAUSTED' in s:
         m = re.search(r'retry in (\\d+)m(\\d+\\.?\\d*)s', s)
         if m:
-            return f'⚠️ Лимит исчерпан. Попробуй через {m.group(1)} мин {round(float(m.group(2)))} сек.'
-        return '⚠️ Лимит на сегодня исчерпан.'
+            mins = int(m.group(1))
+            secs = round(float(m.group(2)))
+            if mins >= 30:
+                return f'😔 Лимит запросов исчерпан. Бот сможет отвечать через {mins} мин {secs} сек. Можно подождать или вернуться завтра.'
+            return f'⚠️ Лимит запросов исчерпан. Попробуй через {mins} мин {secs} сек.'
+        return '😔 Лимит запросов на сегодня исчерпан. Бот ответит завтра. Спасибо за понимание!'
     if '503' in s or 'UNAVAILABLE' in s:
-        return '⏳ Сервер перегружен. Подожди пару минут.'
+        return '⏳ Сервер ИИ сейчас перегружен. Подожди 2-3 минуты и попробуй снова.'
     if '404' in s or 'NOT_FOUND' in s:
-        return '🔧 Модель недоступна.'
-    return '❌ Ошибка. Попробуй позже.'
+        return '🔧 Модель временно недоступна. Мы уже чиним. Попробуй позже.'
+    if '401' in s or 'Unauthorized' in s:
+        return '🔐 Техническая ошибка доступа. Администратор уже уведомлён.'
+    return '❌ Что-то пошло не так. Попробуй позже.'
 
 def menu():
     kb = telebot.types.ReplyKeyboardMarkup(resize_keyboard=True)
